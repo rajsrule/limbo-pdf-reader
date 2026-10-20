@@ -12,7 +12,7 @@ Windows 11 x64 is the initial target. The installer uses Microsoft Edge WebView2
 
 ## Reading
 
-- **Smart Dark:** neutral paper becomes black and neutral ink becomes soft white, while colors and embedded images retain their original pixels. Already-dark pages, scans, and complex artwork are preserved. Choose **Original** or **Full Invert** whenever needed; hold **Original** in the status bar for a temporary comparison.
+- **Smart Dark:** neutral paper becomes black and neutral ink becomes soft white, while colors and embedded images retain their original pixels. Already-dark pages, scans, and complex artwork are preserved. Choose **Original** or **Full Invert** whenever needed; hold the floating **Original** button or **\\** for a temporary comparison.
 - **Your place, remembered:** page, zoom, rotation, color mode, bookmarks, and per-page original-color overrides are stored locally.
 - **Reading tools:** continuous/single-page views, fit width/page, text selection, search, outline chapters, lazy thumbnails, bookmarks, fullscreen, and focus mode.
 - **Markup:** highlight text and attach a comment. Drafts save locally; **Export annotated PDF** writes a separate shareable PDF, with original page colors. Original files are never overwritten.
@@ -41,6 +41,7 @@ Right-click a tab → **Move to new window**, or press **Ctrl+Shift+N**. You can
 | Next / previous tab | Ctrl+Tab / Ctrl+Shift+Tab |
 | Close tab | Ctrl+W |
 | Bookmark page | Ctrl+D |
+| Hold original colors | \\ |
 | Print original colors | Ctrl+P |
 | Fullscreen | F11 |
 | Leave focus mode | Escape |

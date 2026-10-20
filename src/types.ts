@@ -67,6 +67,7 @@ export interface ReaderHandle {
   undo(): void;
   redo(): void;
   refreshColors(): void;
+  previewOriginal(active: boolean): void;
   bookmark(): void;
   toggleOriginal(): void;
   editComment(item: MarkupItem): void;

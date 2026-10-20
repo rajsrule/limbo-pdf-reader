@@ -32,6 +32,11 @@ import type {
   Tab,
 } from "./types";
 import { Icon, ToolButton } from "./Icon";
+import {
+  destinationKey,
+  resolveChapterPages,
+  type ChapterPage,
+} from "./outline";
 
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.mjs";
 type Ask = (
@@ -62,7 +67,7 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
   const state = useRef<ReadingState>({ ...tab.state });
   const [reading, setReading] = useState(state.current);
   const [status, setStatus] = useState("Opening document…"),
-    [saveStatus, setSaveStatus] = useState("Local document");
+    [saveStatus, setSaveStatus] = useState("");
   const [count, setCount] = useState(0),
     [sidebar, setSidebar] = useState(false),
     [sideTab, setSideTab] = useState("chapters");
@@ -79,6 +84,9 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
   const classes = useRef(new Map<number, Classification>()),
     classTasks = useRef(new Map<number, Promise<Classification>>());
   const storedMarkup = useRef<MarkupItem[]>([]);
+  const chapterPages = useRef(new Map<string, ChapterPage>());
+  const [, updateChapters] = useState(0);
+  const interaction = useRef({ pointer: false, last: 0 });
   const saving = useRef<Promise<void> | null>(null),
     savedReading = useRef<string>(""),
     savedHash = useRef<string | null>(null),
@@ -94,34 +102,33 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
     if (!ui) return [];
     const items: MarkupItem[] = [],
       converted = new Set<string>();
-    for (let p = 0; p < (engine.current?.doc.numPages || 0); p++)
-      for (const editor of ui.getEditors(p)) {
-        if (editor.annotationElementId)
-          converted.add(editor.annotationElementId);
-        if (editor.isEmpty?.() || editor.deleted) continue;
-        items.push({
-          id: editor.id,
-          page: p + 1,
-          text: editor.content || editor.getText?.() || "Highlighted passage",
-          comment: editor.comment?.text || "",
-          color: editor.color || "#bca2f5",
-          editor,
-        });
-      }
-    for (const value of engine.current?.doc.annotationStorage.serializable.map?.values() ||
-      [])
-      if ((value as any).deleted && (value as any).id)
-        converted.add((value as any).id);
+    for (const editor of (ui as any).limboEditors()) {
+      if (editor.annotationElementId) converted.add(editor.annotationElementId);
+      if (editor.isEmpty?.() || editor.deleted) continue;
+      items.push({
+        id: editor.id,
+        page: editor.pageIndex + 1,
+        text: editor.content || editor.getText?.() || "Highlighted passage",
+        comment: editor.comment?.text || "",
+        color: editor.color || "#bca2f5",
+        editor,
+      });
+    }
+    for (const [, value] of (engine.current?.doc.annotationStorage as any) ||
+      []) {
+      const serialized = value.serialize?.() || value;
+      if (serialized.deleted && serialized.id) converted.add(serialized.id);
+    }
     return [
       ...storedMarkup.current.filter((item) => !converted.has(item.id)),
       ...items,
     ].sort((a, b) => a.page - b.page);
   };
-  const flush = async () => {
+  const flush = async (commit = true) => {
     if (saving.current) await saving.current;
     const e = engine.current;
     if (!e) return;
-    e.ui?.endCurrentEditing();
+    if (commit) e.ui?.endCurrentEditing();
     const hash = e.doc.annotationStorage.serializable.hash;
     const job = (async () => {
       const readingJson = JSON.stringify(state.current);
@@ -130,12 +137,12 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
         savedReading.current = readingJson;
       }
       if (hash === savedHash.current) return;
-      if (alive.current) setSaveStatus("Saving locally…");
+      if (alive.current) setSaveStatus("Saving…");
       const bytes = await e.doc.saveDocument();
       await writeDraft(tab.info, bytes);
       savedHash.current = hash;
       if (alive.current) {
-        setSaveStatus("Saved locally");
+        setSaveStatus("Saved");
         setMarkup(currentMarkup());
       }
     })();
@@ -151,6 +158,12 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
   };
   const refreshColors = () => {
     engine.current?.viewer.refresh();
+  };
+  const previewOriginal = (active: boolean) => {
+    if (previewRef.current === active) return;
+    previewRef.current = active;
+    setPreview(active);
+    refreshColors();
   };
   const navigate = (page: number) => {
     const v = engine.current?.viewer;
@@ -342,6 +355,7 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
     undo: () => engine.current?.ui?.undo(),
     redo: () => engine.current?.ui?.redo(),
     refreshColors,
+    previewOriginal,
     bookmark: () =>
       update({
         bookmarks: reading.bookmarks.includes(reading.page)
@@ -528,6 +542,7 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
         enableDetailCanvas: false,
         imagesRightClickMinSize: -1,
         enableAutoLinking: false,
+        enableHighlightFloatingButton: true,
         commentManager,
       } as any);
       engine.current = { viewer, bus, doc, ui: null };
@@ -582,10 +597,17 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
       viewer.setDocument(doc);
       setCount(doc.numPages);
       setOutline(((await doc.getOutline()) || []) as OutlineItem[]);
-      if (draft) setSaveStatus("Restored local draft");
+      if (draft) setSaveStatus("Draft restored");
       let lastError = "";
       timer = setInterval(() => {
-        void flush().catch((e) => {
+        if (
+          interaction.current.pointer ||
+          Date.now() - interaction.current.last < 1200 ||
+          !window.getSelection()?.isCollapsed ||
+          document.querySelector(".modal-shade")
+        )
+          return;
+        void flush(false).catch((e) => {
           const message = String(e);
           if (lastError !== message) {
             lastError = message;
@@ -632,9 +654,55 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
     return () => clearTimeout(timer);
   }, [query]);
   useEffect(() => {
-    previewRef.current = preview;
-    refreshColors();
-  }, [preview]);
+    if (
+      !saveStatus ||
+      saveStatus.startsWith("Save failed") ||
+      saveStatus === "Saving…"
+    )
+      return;
+    const timeout = setTimeout(() => setSaveStatus(""), 2400);
+    return () => clearTimeout(timeout);
+  }, [saveStatus]);
+  useEffect(() => {
+    const markInteraction = (event: Event) => {
+      interaction.current.last = Date.now();
+      if (event.type === "pointerdown") interaction.current.pointer = true;
+      if (
+        event.type === "pointerup" ||
+        event.type === "pointercancel" ||
+        event.type === "blur"
+      )
+        interaction.current.pointer = false;
+    };
+    const events = [
+      "pointerdown",
+      "pointerup",
+      "pointercancel",
+      "keydown",
+      "blur",
+    ];
+    events.forEach((name) => window.addEventListener(name, markInteraction));
+    return () =>
+      events.forEach((name) =>
+        window.removeEventListener(name, markInteraction),
+      );
+  }, []);
+  useEffect(() => {
+    if (!ready || !sidebar || sideTab !== "chapters" || !engine.current) return;
+    let cancelled = false;
+    void resolveChapterPages(
+      engine.current.doc,
+      outline,
+      chapterPages.current,
+      () => {
+        if (!cancelled) updateChapters((v) => v + 1);
+      },
+      () => cancelled,
+    ).catch(onError);
+    return () => {
+      cancelled = true;
+    };
+  }, [ready, sidebar, sideTab, outline]);
   useEffect(() => {
     if (!sidebar || sideTab !== "annotations" || !ready) return;
     let cancelled = false;
@@ -681,6 +749,12 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
       <div key={`${depth}-${i}`}>
         <button
           className="outline-item"
+          aria-label={item.title}
+          title={
+            chapterPages.current.get(destinationKey(item.dest))
+              ? `Page ${chapterPages.current.get(destinationKey(item.dest))!.label}`
+              : item.title
+          }
           style={{ paddingLeft: 14 + depth * 13 }}
           onClick={() => {
             if (item.dest)
@@ -689,7 +763,10 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
               ).goToDestination(item.dest as any);
           }}
         >
-          {item.title}
+          <span>{item.title}</span>
+          <span className="chapter-page">
+            {chapterPages.current.get(destinationKey(item.dest))?.label || ""}
+          </span>
         </button>
         {outlineNodes(item.items || [], depth + 1)}
       </div>
@@ -796,6 +873,7 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
         <select
           className="color-mode"
           aria-label="Page colors"
+          title={status}
           value={reading.mode}
           onChange={(e) => {
             update({ mode: e.target.value as ReadingState["mode"] });
@@ -835,7 +913,7 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
           />
           {more && (
             <div
-              className="dropdown reader-menu"
+              className="app-menu reader-menu"
               onClick={() => setMore(false)}
             >
               <button onClick={() => changeTool("select")}>
@@ -1066,7 +1144,18 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
           </aside>
         )}
         <div className="viewer-stage">
-          <div className="viewer-container" ref={container} tabIndex={0}>
+          <div
+            className="viewer-container"
+            ref={container}
+            tabIndex={0}
+            onMouseDownCapture={(event) => {
+              if (
+                event.button === 0 &&
+                (event.target as Element).closest(".textLayer .editToolbar")
+              )
+                event.preventDefault();
+            }}
+          >
             <div ref={pages} className="pdfViewer" />
           </div>
           {!ready && !failure && (
@@ -1082,42 +1171,41 @@ export const Reader = forwardRef<ReaderHandle, Props>(function Reader(
               <p>{failure}</p>
             </div>
           )}
+          {ready && (
+            <>
+              <button
+                className="preview-button"
+                aria-label={"Hold original colors (\\)"}
+                aria-pressed={preview}
+                onPointerDown={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.setPointerCapture(e.pointerId);
+                  previewOriginal(true);
+                }}
+                onPointerUp={() => previewOriginal(false)}
+                onPointerCancel={() => previewOriginal(false)}
+                onBlur={() => previewOriginal(false)}
+                onKeyDown={(e) => {
+                  if (e.key === " " || e.key === "Enter") {
+                    e.preventDefault();
+                    previewOriginal(true);
+                  }
+                }}
+                onKeyUp={() => previewOriginal(false)}
+                title={"Hold to preview original colors (\\)"}
+              >
+                <Icon name="eye" size={14} />
+                <span>Original</span>
+                <kbd>\</kbd>
+              </button>
+              {saveStatus && (
+                <div className="save-status" role="status">
+                  {saveStatus}
+                </div>
+              )}
+            </>
+          )}
         </div>
-      </div>
-      <div className="reader-status">
-        <span>
-          <i
-            className={
-              reading.mode === "smart" ? "status-dot violet" : "status-dot"
-            }
-          />
-          {preview
-            ? "Original-color preview"
-            : reading.mode === "original" ||
-                reading.originals.includes(reading.page)
-              ? "Original colors"
-              : reading.mode === "invert"
-                ? "Full Invert · includes images"
-                : status}
-        </span>
-        <button
-          className="preview-button"
-          onPointerDown={(e) => {
-            e.currentTarget.setPointerCapture(e.pointerId);
-            setPreview(true);
-          }}
-          onPointerUp={() => setPreview(false)}
-          onPointerCancel={() => setPreview(false)}
-          onKeyDown={(e) => {
-            if (e.key === " ") setPreview(true);
-          }}
-          onKeyUp={() => setPreview(false)}
-          title="Hold to preview original colors"
-        >
-          <Icon name="eye" size={14} />
-          <span>Hold for original</span>
-        </button>
-        <span className="save-status">{saveStatus}</span>
       </div>
     </div>
   );

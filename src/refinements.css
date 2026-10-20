@@ -13,10 +13,10 @@
   overflow: hidden;
   white-space: nowrap;
   padding: 10px 14px;
-  background: #291b37;
-  border: 1px solid #8f6ab1;
+  background: #080808;
+  border: 1px solid #41434f;
   border-radius: 6px;
-  color: #d2b7e6;
+  color: #dedee2;
   box-shadow: 0 8px 25px #0009;
   font-size: 11px;
 }
@@ -27,18 +27,301 @@
   position: fixed;
   inset: 46px 0 0;
   z-index: 90;
-  background: #09050fe8;
+  background: #000e;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 14px;
-  color: #bd9ddd;
+  color: #c5c5cb;
 }
 .reader .annotationEditorLayer .highlightEditor .editToolbar {
   color-scheme: dark;
 }
 .reader .annotationEditorLayer .highlightEditor.selectedEditor {
-  outline-color: #bb91e6;
+  outline-color: #a5a8ba;
+}
+:root {
+  color: #dedee2;
+  --violet: #a0a4ba;
+  --muted: #89898f;
+  --line: #202023;
+  --surface: #000;
+  --hover: #111;
+  --accent-line: #343848;
+}
+.titlebar,
+.tabstrip,
+.reader-toolbar,
+.reader-sidebar,
+.viewer-stage,
+.find-bar,
+.text-dialog,
+.about-dialog,
+.app-menu,
+.markup-card {
+  background: #000;
+  border-color: var(--line);
+}
+.titlebar-document {
+  color: #77777e;
+}
+.pane.focused .tabstrip {
+  border-bottom-color: var(--accent-line);
+}
+.split-divider {
+  background: #1a1a1c;
+}
+.split-divider:hover,
+.split-divider:focus {
+  background: #6d748f;
+}
+.tool {
+  color: #a4a4ad;
+}
+.tool.selected {
+  background: #121214;
+  color: #d5d6e2;
+  box-shadow: inset 0 -1px #757d9d;
+}
+.document-tab.active {
+  color: #dedee2;
+  background: #090909;
+  border-color: #29292e;
+  border-bottom-color: #090909;
+}
+.document-tab > svg {
+  color: #93939d;
+}
+input,
+select,
+textarea,
+.reader-toolbar select,
+.page-navigation input {
+  background: #080808;
+  border-color: #29292e;
+  color: #ceced4;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline-color: #929ab7;
+}
+::selection {
+  background: #68779866;
+}
+.welcome {
+  background:
+    radial-gradient(ellipse at 46% 27%, #1b152323, transparent 45%),
+    radial-gradient(ellipse at 59% 22%, #121c2820, transparent 38%), #000;
+}
+.welcome-content {
+  padding-top: 65px;
+}
+.welcome h1 {
+  margin-bottom: 28px;
+}
+.welcome h1 > span {
+  color: #acafc1;
+  background: linear-gradient(105deg, #b6aec5, #96a8b9);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.limbo-emblem {
+  border-color: #202027;
+  box-shadow: none;
+}
+.limbo-emblem:before {
+  border-color: #20202780;
+}
+.limbo-emblem svg {
+  fill: #b9b9ca;
+  stroke: #9297af;
+}
+.starfield i {
+  background: #c8d0dd;
+}
+.starfield i:nth-child(5n) {
+  box-shadow: 0 0 6px #a4b0c44d;
+}
+.primary-button {
+  color: #e0e0e6;
+  background:
+    linear-gradient(#080808, #080808) padding-box,
+    linear-gradient(110deg, #484052, #354251) border-box;
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+.primary-button:hover:not(:disabled) {
+  background: #151517;
+  border-color: #63667b;
+}
+.primary-button > span {
+  border-color: #33333a;
+}
+.recent-icon {
+  background: #080808;
+  border-color: #29292e;
+  color: #a0a2b3;
+}
+.recent-file strong {
+  color: #c5c5ce;
+}
+.recent-file small {
+  color: #75757d;
+}
+.sidebar-tabs {
+  border-color: #202023;
+}
+.sidebar-heading {
+  color: #9b9ba5;
+}
+.outline-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid #66739f29;
+  color: #bfbfc7;
+}
+.outline-item > span:first-child {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.chapter-page {
+  flex-shrink: 0;
+  color: #858da6;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.viewer-stage {
+  isolation: isolate;
+}
+.pdfViewer .page {
+  box-shadow: 0 0 0 1px #202023;
+}
+.preview-button {
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  z-index: 100002;
+  padding: 8px 10px;
+  gap: 8px;
+  background: #000e;
+  border: 1px solid #33353e;
+  border-radius: 7px;
+  color: #b9bbc8;
+  font-size: 11px;
+  box-shadow: 0 3px 14px #0008;
+}
+.preview-button[aria-pressed="true"] {
+  border-color: #929ab7;
+  color: #eee;
+}
+.preview-button kbd {
+  padding: 0 4px;
+  color: #9a9dab;
+  border-color: #33353e;
+}
+.save-status {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 100002;
+  border-radius: 5px;
+  background: #000e;
+  padding: 6px 9px;
+  color: #a3a3ab;
+  font-size: 10px;
+}
+.modal-shade {
+  backdrop-filter: none;
+  background: #000b;
+}
+.text-dialog input,
+.text-dialog textarea {
+  background: #060606;
+  border-color: #33343d;
+  color: #ddd;
+}
+.text-dialog h2 {
+  font-size: 18px;
+}
+.toast {
+  background: #080808;
+  color: #ddd;
+  border-color: #414451;
+}
+.drop-overlay {
+  background: #000e;
+  border-color: #777f9c;
+}
+.thumbnail.selected {
+  background: #101012;
+  border-color: #707894;
+}
+/* PDF.js expects its host to supply generic visibility and comment icon rules.
+   Keep its menus isolated from Limbo's application menus. */
+.pdfViewer .hidden,
+.pdfViewer [hidden] {
+  display: none !important;
+}
+.pdfViewer .visuallyHidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.pdfViewer {
+  --comment-edit-button-icon: url("/pdfjs/images/comment-editButton.svg");
+}
+.pdfViewer
+  :is(.annotationEditorLayer .highlightEditor, .textLayer)
+  .editToolbar {
+  --editor-toolbar-bg-color: #080808;
+  --editor-toolbar-fg-color: #d0d0d8;
+  --editor-toolbar-border-color: #363840;
+  --editor-toolbar-hover-bg-color: #1b1b1e;
+  --editor-toolbar-hover-fg-color: #fff;
+  --editor-toolbar-focus-outline-color: #a4abc4;
+  --editor-toolbar-delete-image: url("/pdfjs/images/editor-toolbar-delete.svg");
+  --editor-toolbar-highlight-image: url("/pdfjs/images/toolbarButton-editorHighlight.svg");
+  --editor-toolbar-colorpicker-arrow-image: url("/pdfjs/images/toolbarButton-menuArrow.svg");
+}
+.pdfViewer .editToolbar button:is(.basic, .comment) {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.pdfViewer
+  :is(.annotationEditorLayer .highlightEditor, .textLayer)
+  .editToolbar
+  button:is(.basic, .comment)::before {
+  position: absolute;
+  inset: 6px;
+  display: block;
+  width: 16px;
+  height: 16px;
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+}
+.pdfViewer .editToolbar .dropdown {
+  min-width: 0;
+}
+.focus-mode .preview-button {
+  opacity: 0.25;
+}
+.focus-mode .preview-button:hover,
+.focus-mode .preview-button:focus-visible {
+  opacity: 1;
 }
 @container (max-width:570px) {
   .reader-toolbar > .tool-cluster:first-child {

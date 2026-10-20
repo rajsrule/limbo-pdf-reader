@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { listen } from "@tauri-apps/api/event";
 import { Reader } from "./Reader";
+import { version } from "../package.json";
 import { Icon, ToolButton } from "./Icon";
 import {
   choosePdfs,
@@ -69,6 +70,7 @@ export default function App() {
     y: number;
   } | null>(null);
   const pendingWindowAck = useRef(false);
+  const previewReader = useRef<ReaderHandle | null>(null);
   const acknowledgeReader = () => {
     if (desktop && pendingWindowAck.current) {
       pendingWindowAck.current = false;
@@ -401,6 +403,20 @@ export default function App() {
         }
         return;
       }
+      if (
+        !ctrl &&
+        !event.altKey &&
+        !event.shiftKey &&
+        !input &&
+        event.code === "Backslash"
+      ) {
+        event.preventDefault();
+        if (!event.repeat) {
+          previewReader.current = activeReader() || null;
+          previewReader.current?.previewOriginal(true);
+        }
+        return;
+      }
       if (ctrl && event.key.toLowerCase() === "o") {
         event.preventDefault();
         openFiles();
@@ -474,8 +490,22 @@ export default function App() {
         activeReader()?.bookmark();
       } else if (!input && event.key === "?") setHelp(true);
     };
+    const stopPreview = () => {
+      previewReader.current?.previewOriginal(false);
+      previewReader.current = null;
+    };
+    const keyup = (event: KeyboardEvent) => {
+      if (event.code === "Backslash") stopPreview();
+    };
     window.addEventListener("keydown", keydown);
-    return () => window.removeEventListener("keydown", keydown);
+    window.addEventListener("keyup", keyup);
+    window.addEventListener("blur", stopPreview);
+    return () => {
+      window.removeEventListener("keydown", keydown);
+      window.removeEventListener("keyup", keyup);
+      window.removeEventListener("blur", stopPreview);
+      stopPreview();
+    };
   }, [dialog]);
   useEffect(() => {
     if (!desktop || !maximize.current) return;
@@ -529,13 +559,12 @@ export default function App() {
         }}
       >
         <div className="brand" data-tauri-drag-region>
-          <Icon name="key" size={19} />
           <span data-tauri-drag-region>
             limbo<span className="brand-dot">.</span>
           </span>
         </div>
         <span className="titlebar-document" data-tauri-drag-region>
-          {activeName || "A quieter place to read"}
+          {activeName || ""}
         </span>
         <div className="app-actions">
           <ToolButton
@@ -563,7 +592,7 @@ export default function App() {
               onClick={() => setAppMenu(!appMenu)}
             />
             {appMenu && (
-              <div className="dropdown app-dropdown">
+              <div className="app-menu app-dropdown">
                 <button
                   onClick={() => {
                     openFiles();
@@ -622,6 +651,7 @@ export default function App() {
       </header>
       <main
         className="workspace"
+        inert={!!dialog || help}
         style={{
           gridTemplateColumns:
             groups.length === 2 ? `${ratio}fr 5px ${100 - ratio}fr` : "1fr",
@@ -874,7 +904,7 @@ export default function App() {
       )}
       {tabMenu && (
         <div
-          className="dropdown tab-context"
+          className="app-menu tab-context"
           style={{ left: tabMenu.x, top: tabMenu.y }}
         >
           <button
@@ -929,12 +959,11 @@ export default function App() {
               onClick={() => setHelp(false)}
             />
             <div className="about-brand">
-              <Icon name="key" size={28} />
               <h2>
                 limbo<span>.</span>
               </h2>
             </div>
-            <p>A quieter place to read. Version 0.1.0</p>
+            <p>Version {version}</p>
             <div className="shortcut-list">
               {[
                 ["Open PDF", "Ctrl+O"],
@@ -946,6 +975,7 @@ export default function App() {
                 ["Move tab to new window", "Ctrl+Shift+N"],
                 ["Next / previous tab", "Ctrl(+Shift)+Tab"],
                 ["Bookmark page", "Ctrl+D"],
+                ["Hold original colors", "\\"],
                 ["Print", "Ctrl+P"],
                 ["Fullscreen", "F11"],
                 ["Windows Snap Layouts", "Win+Z"],
@@ -999,10 +1029,6 @@ function Welcome({
         ))}
       </div>
       <div className="welcome-content">
-        <div className="eyebrow">
-          <span />
-          YOUR SPACE BETWEEN CHAPTERS
-        </div>
         <div className="limbo-emblem">
           <svg viewBox="0 0 120 120" aria-hidden="true">
             <path d="M61 19 87 43 72 69 42 77 30 52 61 19M61 19 60 53 87 43M60 53 42 77M60 53 72 69" />
@@ -1012,7 +1038,6 @@ function Welcome({
             <circle cx="42" cy="77" r="2" />
             <circle cx="30" cy="52" r="2" />
             <circle cx="60" cy="53" r="4" />
-            <path className="emblem-key" d="m60 56 0 40m0-9h10m-10-8h7" />
           </svg>
         </div>
         <h1>
@@ -1020,11 +1045,6 @@ function Welcome({
           <br />
           <span>closer to the dark.</span>
         </h1>
-        <p className="welcome-copy">
-          Your PDFs. A quieter canvas.
-          <br />
-          Thoughtful tools, nothing in the way.
-        </p>
         <button className="primary-button" onClick={open}>
           <Icon name="open" size={18} />
           Open a PDF<span>Ctrl O</span>
@@ -1054,26 +1074,6 @@ function Welcome({
             ))}
           </div>
         )}
-        <div className="welcome-features">
-          <span>
-            <Icon name="moon" size={14} />
-            Smart Dark
-          </span>
-          <span>
-            <Icon name="highlight" size={14} />
-            Make your mark
-          </span>
-          <span>
-            <Icon name="split" size={14} />
-            Read side by side
-          </span>
-        </div>
-      </div>
-      <div className="welcome-footer">
-        <span>LIMBO READER</span>
-        <span>
-          OFFLINE BY DESIGN <i />
-        </span>
       </div>
     </div>
   );

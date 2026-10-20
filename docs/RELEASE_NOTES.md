@@ -1,13 +1,13 @@
-Limbo is an offline Windows 11 PDF reader with a black OLED interface and restrained violet accents.
+Limbo 0.1.2 revises the reading interface and annotation controls.
 
-- Smart Dark preserves digital colors and embedded images, with Original and Full Invert modes.
-- Tabs, two-pane reading, independent page controls, and separate Windows windows.
-- Highlights, attached comments, local draft recovery, and annotated-copy export.
-- Search, chapters, thumbnails, bookmarks, focus mode, and original-color printing.
-- Drag PDFs into Limbo or choose it from Explorer's Open with menu.
+- Black reader surfaces, neutral text, and restrained blue/violet accents. Removed promotional labels, the title-bar key icon, and the permanent status bar.
+- Hold the floating **Original** button or **\\** to preview original colors. **Ctrl+\\** still toggles split reading.
+- Chapter rows have subtle separators and PDF page labels, including Roman numerals.
+- Fixed blank/displaced annotation icons, oversized color menus, selection loss when clicking highlight actions, and annotation controls appearing above comment dialogs.
+- Background autosave no longer ends the current editing session. Annotation listing visits existing editors once rather than scanning every document page on each refresh.
 
-Download **Limbo-Setup.exe** for Windows 11 x64. The installer is per-user. Microsoft WebView2 is required and can be installed automatically if missing. This first release is unsigned, so Windows may display a publisher/reputation warning.
+To update, close Limbo, run **Limbo-Setup.exe**, and open **Limbo** from Start. Drafts and reading positions remain in the application-data folder.
 
-Smart Dark preserves scans and complex artwork in their original colors. Full Invert is available for monochrome scans. Reading colors are never written into exported PDFs.
+Windows 11 x64. The installer is per-user and unsigned; Windows may display a reputation warning. WebView2 can be installed automatically if missing. Smart Dark preserves scans and complex artwork in their original colors. Reading colors are never written into exported PDFs.
 
 See the README and validation notes for tested behavior and remaining limitations.

@@ -32,7 +32,8 @@ test("digital colors, dark pages, scanned fallback, navigation, and outline", as
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await open(page, sample);
-  await expect(page.locator(".reader-status")).toContainText(
+  await expect(page.getByLabel("Page colors", { exact: true })).toHaveAttribute(
+    "title",
     "Smart Dark · colors preserved",
   );
   const pixel = async (x: number, y: number) =>
@@ -88,11 +89,20 @@ test("digital colors, dark pages, scanned fallback, navigation, and outline", as
   expect(await pixel(100, 300)).toEqual(blue);
   await page.getByLabel("Page colors", { exact: true }).selectOption("smart");
   await page.getByLabel("Page number", { exact: true }).fill("2");
-  await expect(page.locator(".reader-status")).toContainText("Already dark");
+  await expect(page.getByLabel("Page colors", { exact: true })).toHaveAttribute(
+    "title",
+    /Already dark/,
+  );
   await page.getByLabel("Page number", { exact: true }).fill("3");
-  await expect(page.locator(".reader-status")).toContainText("scanned page");
+  await expect(page.getByLabel("Page colors", { exact: true })).toHaveAttribute(
+    "title",
+    /scanned page/,
+  );
   await page.getByLabel("Page number", { exact: true }).fill("4");
-  await expect(page.locator(".reader-status")).toContainText("complex artwork");
+  await expect(page.getByLabel("Page colors", { exact: true })).toHaveAttribute(
+    "title",
+    /complex artwork/,
+  );
   await page
     .getByRole("button", { name: "Toggle sidebar", exact: true })
     .click();
@@ -174,7 +184,7 @@ test("highlight, attached comment, export, and draft recovery", async ({
     .getByLabel("Comment", { exact: true })
     .fill("A note that travels with the document.");
   await page.getByRole("button", { name: "Save comment", exact: true }).click();
-  await expect(page.locator(".save-status")).toHaveText("Saved locally");
+  await expect(page.locator(".save-status")).toHaveText("Saved");
   const download = page.waitForEvent("download");
   await page.keyboard.press("Control+Shift+s");
   const file = await download;
@@ -183,13 +193,12 @@ test("highlight, attached comment, export, and draft recovery", async ({
     .getByRole("button", { name: "Close Reading sample.pdf", exact: true })
     .click();
   await open(page, sample);
-  await expect(page.locator(".save-status")).toContainText(
-    "Restored local draft",
-  );
+  await expect(page.locator(".save-status")).toContainText("Draft restored");
   await expect(
     page.locator(".annotationLayer .highlightAnnotation"),
   ).toHaveCount(1);
-  await expect(page.locator(".reader-status")).toContainText(
+  await expect(page.getByLabel("Page colors", { exact: true })).toHaveAttribute(
+    "title",
     "Smart Dark · colors preserved",
   );
   await page
@@ -243,7 +252,10 @@ test("600-page document renders on demand", async ({ page }) => {
   await open(page, path.resolve("tests/fixtures/Large document.pdf"));
   const firstPageMs = Date.now() - start;
   await page.getByLabel("Page number", { exact: true }).fill("599");
-  await expect(page.locator(".reader-status")).toContainText("Smart Dark");
+  await expect(page.getByLabel("Page colors", { exact: true })).toHaveAttribute(
+    "title",
+    /Smart Dark/,
+  );
   await expect(
     page.getByText("Large document / page 599", { exact: true }),
   ).toBeVisible();

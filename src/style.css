@@ -1,15 +1,15 @@
 :root {
   font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
-  color: #e6e3ed;
+  color: #e4e4e4;
   background: #000;
   font-synthesis: none;
   font-size: 13px;
   color-scheme: dark;
-  --violet: #b6a0e9;
-  --muted: #7d7888;
-  --line: #211e27;
-  --surface: #0b0a0e;
-  --hover: #1b1723;
+  --violet: #aaaaaa;
+  --muted: #7a7a7a;
+  --line: #1f1f1f;
+  --surface: #0b0b0b;
+  --hover: #191919;
 }
 * {
   box-sizing: border-box;
@@ -39,7 +39,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid #aa8ae1;
+  outline: 2px solid #979797;
   outline-offset: 2px;
 }
 button {
@@ -50,9 +50,9 @@ button {
 input,
 select,
 textarea {
-  background: #131117;
-  border: 1px solid #302936;
-  color: #e6e3ed;
+  background: #121212;
+  border: 1px solid #2b2b2b;
+  color: #e4e4e4;
   border-radius: 5px;
 }
 select {
@@ -68,8 +68,8 @@ kbd {
   font-family: inherit;
   font-size: 10px;
   white-space: nowrap;
-  color: #8e859d;
-  border: 1px solid #312a3b;
+  color: #898989;
+  border: 1px solid #2d2d2d;
   border-radius: 4px;
   padding: 2px 5px;
 }
@@ -82,14 +82,14 @@ svg {
   flex-shrink: 0;
 }
 ::selection {
-  background: #7c5bbb66;
+  background: #69696966;
 }
 ::-webkit-scrollbar {
   width: 7px;
   height: 5px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #39323f;
+  background: #343434;
   border-radius: 10px;
 }
 ::-webkit-scrollbar-track {
@@ -106,8 +106,8 @@ svg {
   min-height: 46px;
   display: flex;
   align-items: center;
-  background: #050506;
-  border-bottom: 1px solid #1a171f;
+  background: #050505;
+  border-bottom: 1px solid #181818;
   user-select: none;
   position: relative;
   z-index: 20;
@@ -135,7 +135,7 @@ svg {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #66616f;
+  color: #636363;
   font-size: 11px;
   pointer-events: none;
 }
@@ -155,12 +155,12 @@ svg {
   gap: 6px;
   padding: 0 6px;
   border-radius: 5px;
-  color: #9b94a7;
+  color: #979797;
   vertical-align: middle;
 }
 .tool.selected {
-  background: #241b32;
-  color: #c2a8f7;
+  background: #1f1f1f;
+  color: #b3b3b3;
 }
 .window-controls {
   height: 100%;
@@ -171,11 +171,11 @@ svg {
   height: 100%;
   display: grid;
   place-items: center;
-  color: #9a95a1;
+  color: #979797;
   border-radius: 0;
 }
 .window-controls > button.window-close:hover {
-  background: #a1263b;
+  background: #424242;
   color: #fff;
 }
 .workspace {
@@ -193,25 +193,25 @@ svg {
   position: relative;
 }
 .pane.focused .tabstrip {
-  border-bottom-color: #4a355f;
+  border-bottom-color: #3c3c3c;
 }
 .split-divider {
   cursor: col-resize;
-  background: #241c30;
+  background: #1f1f1f;
   touch-action: none;
   z-index: 10;
 }
 .split-divider:hover,
 .split-divider:focus {
-  background: #9670c9;
+  background: #7f7f7f;
 }
 .tabstrip {
   height: 38px;
   min-height: 38px;
   display: flex;
   align-items: center;
-  background: #08070a;
-  border-bottom: 1px solid #211b2a;
+  background: #070707;
+  border-bottom: 1px solid #1d1d1d;
   gap: 3px;
   padding: 4px 5px 0;
   overflow-x: auto;
@@ -229,15 +229,15 @@ svg {
   padding: 0 8px 0 11px;
   border: 1px solid transparent;
   border-radius: 6px 6px 0 0;
-  color: #716a7e;
+  color: #6d6d6d;
   cursor: pointer;
   user-select: none;
 }
 .document-tab.active {
-  color: #d3c7e4;
-  background: #151019;
-  border-color: #30243c;
-  border-bottom-color: #151019;
+  color: #cccccc;
+  background: #121212;
+  border-color: #282828;
+  border-bottom-color: #121212;
 }
 .document-tab > span {
   overflow: hidden;
@@ -246,7 +246,7 @@ svg {
   font-size: 11px;
 }
 .document-tab > svg {
-  color: #8a72a7;
+  color: #7b7b7b;
 }
 .document-tab > button {
   margin-left: auto;
@@ -263,7 +263,7 @@ svg {
   flex-direction: column;
   align-items: center;
   background:
-    radial-gradient(ellipse at 50% 24%, #1b102b55, transparent 47%), #000;
+    radial-gradient(ellipse at 50% 24%, #14141455, transparent 47%), #000;
   min-height: 0;
 }
 .starfield {
@@ -279,12 +279,12 @@ svg {
   width: 2px;
   height: 2px;
   border-radius: 50%;
-  background: #d5c1fa;
+  background: #c9c9c9;
 }
 .starfield i:nth-child(5n) {
   width: 3px;
   height: 3px;
-  box-shadow: 0 0 7px #b6a0e9;
+  box-shadow: 0 0 7px #aaaaaa;
 }
 .welcome-content {
   position: relative;
@@ -295,7 +295,7 @@ svg {
 .eyebrow {
   font-size: 9px;
   letter-spacing: 2.6px;
-  color: #9383a8;
+  color: #898989;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -305,34 +305,34 @@ svg {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #c4a8f0;
-  box-shadow: 0 0 10px #9879be;
+  background: #b3b3b3;
+  box-shadow: 0 0 10px #858585;
 }
 .limbo-emblem {
   width: 116px;
   height: 116px;
   margin: 18px auto 12px;
-  border: 1px solid #20162d;
+  border: 1px solid #1a1a1a;
   border-radius: 50%;
   position: relative;
-  box-shadow: 0 0 50px #54347c12;
+  box-shadow: 0 0 50px #40404012;
 }
 .limbo-emblem:before {
   content: "";
   position: absolute;
   inset: 9px;
-  border: 1px solid #21162d66;
+  border: 1px solid #1a1a1a66;
   border-radius: 50%;
 }
 .limbo-emblem svg {
   width: 100%;
   height: 100%;
-  fill: #b79ae6;
-  stroke: #8f6bb7;
+  fill: #a6a6a6;
+  stroke: #787878;
   stroke-width: 0.8;
 }
 .limbo-emblem .emblem-key {
-  stroke: #c6a7f1;
+  stroke: #b3b3b3;
   stroke-width: 1.8;
   fill: none;
 }
@@ -342,44 +342,44 @@ svg {
   line-height: 1.15;
   letter-spacing: -1.8px;
   margin: 22px 0 20px;
-  color: #eeebf2;
+  color: #ececec;
 }
 .welcome h1 > span {
-  color: #9c85bc;
+  color: #8e8e8e;
 }
 .welcome-copy {
   font-size: 13px;
-  color: #82798e;
+  color: #7c7c7c;
   line-height: 1.8;
   margin: 0 0 25px;
 }
 .primary-button {
-  background: #b59adf;
-  color: #160f20;
+  background: #a5a5a5;
+  color: #121212;
   padding: 12px 19px;
-  border: 1px solid #c0a7e7;
+  border: 1px solid #b1b1b1;
   border-radius: 7px;
   font-weight: 600;
   display: inline-flex;
   gap: 11px;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 25px #6e429a16;
+  box-shadow: 0 4px 25px #52525216;
 }
 .primary-button:hover:not(:disabled) {
-  background: #c9b0f0;
+  background: #bababa;
 }
 .primary-button > span {
   font-size: 10px;
   font-weight: 400;
   margin-left: 19px;
   opacity: 0.6;
-  border-left: 1px solid #412e5a55;
+  border-left: 1px solid #35353555;
   padding-left: 13px;
 }
 .drop-hint {
   font-size: 11px;
-  color: #5f566b;
+  color: #595959;
   margin: 12px 0 31px;
 }
 .welcome-features {
@@ -389,7 +389,7 @@ svg {
   margin-top: 36px;
   white-space: nowrap;
   font-size: 10px;
-  color: #74677f;
+  color: #6b6b6b;
 }
 .welcome-features > span {
   display: flex;
@@ -397,7 +397,7 @@ svg {
   gap: 7px;
 }
 .welcome-features svg {
-  color: #9a7bbb;
+  color: #868686;
 }
 .welcome-footer {
   margin-top: auto;
@@ -407,7 +407,7 @@ svg {
   justify-content: space-between;
   font-size: 8px;
   letter-spacing: 1.8px;
-  color: #51465d;
+  color: #4a4a4a;
 }
 .welcome-footer > span:last-child {
   display: flex;
@@ -418,7 +418,7 @@ svg {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #78658b;
+  background: #6c6c6c;
 }
 .compact .welcome-content {
   padding-top: 48px;
@@ -437,7 +437,7 @@ svg {
 .recents {
   text-align: left;
   margin-top: 32px;
-  border-top: 1px solid #211927;
+  border-top: 1px solid #1c1c1c;
   padding-top: 16px;
 }
 .recents-heading {
@@ -446,13 +446,13 @@ svg {
   align-items: center;
   font-size: 8px;
   letter-spacing: 1.8px;
-  color: #766780;
+  color: #6c6c6c;
   padding: 0 4px 9px;
 }
 .recents-heading > button {
   font-size: 10px;
   letter-spacing: 0;
-  color: #867596;
+  color: #7b7b7b;
   border-radius: 4px;
 }
 .recent-file {
@@ -469,9 +469,9 @@ svg {
   place-items: center;
   width: 32px;
   height: 36px;
-  border: 1px solid #33243f;
-  background: #191020;
-  color: #a182bd;
+  border: 1px solid #292929;
+  background: #131313;
+  color: #8d8d8d;
   border-radius: 5px;
 }
 .recent-file > span:nth-child(2) {
@@ -485,11 +485,11 @@ svg {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 500;
-  color: #c6b8d2;
+  color: #bdbdbd;
 }
 .recent-file small {
   font-size: 9px;
-  color: #655770;
+  color: #5c5c5c;
   display: block;
   margin-top: 4px;
   overflow: hidden;
@@ -497,7 +497,7 @@ svg {
   white-space: nowrap;
 }
 .recent-file > svg {
-  color: #64526f;
+  color: #585858;
 }
 .reader {
   flex: 1;
@@ -512,8 +512,8 @@ svg {
   gap: 9px;
   min-height: 48px;
   padding: 7px 10px;
-  border-bottom: 1px solid #211a29;
-  background: #0a080d;
+  border-bottom: 1px solid #1d1d1d;
+  background: #090909;
   z-index: 8;
 }
 .tool-cluster {
@@ -522,7 +522,7 @@ svg {
   align-items: center;
 }
 .tool-cluster + .tool-cluster {
-  border-left: 1px solid #302637;
+  border-left: 1px solid #292929;
   padding-left: 9px;
 }
 .toolbar-spacer {
@@ -538,8 +538,8 @@ svg {
   width: 43px;
   text-align: center;
   font-size: 11px;
-  border-color: #302539;
-  background: #141019;
+  border-color: #292929;
+  background: #121212;
   padding: 5px 3px;
   appearance: textfield;
 }
@@ -548,13 +548,13 @@ svg {
 }
 .page-navigation > span {
   font-size: 10px;
-  color: #73667e;
+  color: #6a6a6a;
 }
 .reader-toolbar select {
   font-size: 11px;
-  background: #16101e;
-  border-color: #31243e;
-  color: #bcabd0;
+  background: #121212;
+  border-color: #292929;
+  color: #b1b1b1;
   padding: 6px 4px;
   max-width: 119px;
 }
@@ -574,7 +574,7 @@ svg {
   position: relative;
   flex: 1;
   min-width: 0;
-  background: #050407;
+  background: #040404;
 }
 .viewer-container {
   position: absolute;
@@ -588,13 +588,13 @@ svg {
   --page-margin: 0 auto 20px !important;
   --page-border: 0 !important;
   --page-bg-color: #fff;
-  --highlight-bg-color: #9471d77a;
-  --highlight-selected-bg-color: #c79cf0aa;
+  --highlight-bg-color: #8080807a;
+  --highlight-selected-bg-color: #abababaa;
 }
 .pdfViewer .page {
   margin-bottom: 20px !important;
   border: 0 !important;
-  box-shadow: 0 0 0 1px #21182b;
+  box-shadow: 0 0 0 1px #1b1b1b;
 }
 .pdfViewer .page .canvasWrapper {
   background: #000;
@@ -609,9 +609,9 @@ svg {
   align-items: center;
   gap: 15px;
   padding: 0 13px;
-  background: #09070c;
-  border-top: 1px solid #211a29;
-  color: #776782;
+  background: #080808;
+  border-top: 1px solid #1d1d1d;
+  color: #6c6c6c;
   font-size: 9px;
   white-space: nowrap;
   overflow: hidden;
@@ -626,12 +626,12 @@ svg {
 .status-dot {
   width: 4px;
   height: 4px;
-  background: #7b7184;
+  background: #747474;
   border-radius: 50%;
   flex-shrink: 0;
 }
 .status-dot.violet {
-  background: #ab84dc;
+  background: #939393;
 }
 .preview-button {
   margin-left: auto;
@@ -640,7 +640,7 @@ svg {
   gap: 6px;
   font-size: 9px;
   padding: 4px;
-  color: #8d789d;
+  color: #7f7f7f;
   border-radius: 4px;
   user-select: none;
   touch-action: none;
@@ -653,11 +653,11 @@ svg {
   align-items: center;
   gap: 9px;
   padding: 7px 12px;
-  background: #17101f;
-  border-bottom: 1px solid #352541;
+  background: #131313;
+  border-bottom: 1px solid #2a2a2a;
 }
 .find-bar > svg {
-  color: #a684c6;
+  color: #909090;
 }
 .find-bar input {
   flex: 1;
@@ -667,14 +667,14 @@ svg {
   padding: 4px;
 }
 .find-bar > span {
-  color: #9c84b0;
+  color: #8c8c8c;
   font-size: 10px;
 }
 .reader-sidebar {
   width: 210px;
   flex-shrink: 0;
-  border-right: 1px solid #241b2e;
-  background: #0b080f;
+  border-right: 1px solid #1e1e1e;
+  background: #090909;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -683,12 +683,12 @@ svg {
   display: flex;
   justify-content: space-around;
   padding: 10px 8px;
-  border-bottom: 1px solid #251b2e;
+  border-bottom: 1px solid #1e1e1e;
 }
 .sidebar-heading {
   text-transform: uppercase;
   letter-spacing: 1.8px;
-  color: #9c84b0;
+  color: #8c8c8c;
   font-size: 9px;
   padding: 19px 14px 12px;
 }
@@ -701,13 +701,13 @@ svg {
   text-align: left;
   width: 100%;
   padding: 9px 12px;
-  color: #aa99bb;
+  color: #9f9f9f;
   font-size: 11px;
   line-height: 1.5;
 }
 .empty-message {
   font-size: 11px;
-  color: #74617f;
+  color: #676767;
   line-height: 1.9;
   padding: 5px 15px;
 }
@@ -717,7 +717,7 @@ svg {
   gap: 10px;
   width: 100%;
   padding: 11px 15px;
-  color: #b6a0c5;
+  color: #a7a7a7;
   font-size: 11px;
 }
 .thumbnails {
@@ -731,15 +731,15 @@ svg {
   padding: 6px 9px;
   border: 1px solid transparent;
   border-radius: 5px;
-  color: #8b729d;
+  color: #7a7a7a;
 }
 .thumbnail.selected {
-  border-color: #9a73bf;
-  background: #291c37;
+  border-color: #818181;
+  background: #212121;
 }
 .thumbnail canvas {
   display: block;
-  background: #16101d;
+  background: #121212;
   width: 124px;
   min-height: 100px;
 }
@@ -749,14 +749,14 @@ svg {
   font-size: 10px;
 }
 .markup-card {
-  border: 1px solid #382644;
+  border: 1px solid #2c2c2c;
   border-radius: 6px;
   margin: 0 10px 11px;
   padding: 10px;
-  background: #181020;
+  background: #131313;
 }
 .markup-location {
-  color: #b08bcf;
+  color: #989898;
   font-size: 8px;
   letter-spacing: 1.5px;
   padding: 2px 0;
@@ -764,7 +764,7 @@ svg {
 .markup-card p {
   font-size: 11px;
   line-height: 1.7;
-  color: #b8a4c7;
+  color: #ababab;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -775,7 +775,7 @@ svg {
 }
 .markup-card > div > button:first-child {
   font-size: 9px;
-  color: #ab88c8;
+  color: #949494;
 }
 .markup-card .tool {
   height: 24px;
@@ -791,16 +791,16 @@ svg {
   align-items: center;
   justify-content: center;
   gap: 15px;
-  background: #07040bed;
-  color: #a58ab9;
+  background: #050505ed;
+  color: #939393;
   font-size: 12px;
   z-index: 5;
 }
 .spinner {
   width: 20px;
   height: 20px;
-  border: 1.5px solid #352344;
-  border-top-color: #c1a1e4;
+  border: 1.5px solid #292929;
+  border-top-color: #adadad;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -816,7 +816,7 @@ svg {
   text-align: center;
 }
 .error-state p {
-  color: #867194;
+  color: #787878;
   font-size: 11px;
   max-width: 500px;
   overflow-wrap: anywhere;
@@ -830,17 +830,17 @@ svg {
 .menu-anchor {
   position: relative;
 }
-.dropdown {
+.app-menu {
   position: absolute;
-  background: #17111e;
-  border: 1px solid #40304e;
+  background: #131313;
+  border: 1px solid #363636;
   border-radius: 8px;
   padding: 5px;
   min-width: 240px;
   box-shadow: 0 12px 55px #000b;
   z-index: 50;
 }
-.dropdown button {
+.app-menu button {
   display: flex;
   gap: 10px;
   align-items: center;
@@ -850,14 +850,14 @@ svg {
   text-align: left;
   font-size: 11px;
   white-space: nowrap;
-  color: #c1accf;
+  color: #b3b3b3;
 }
-.dropdown button svg {
+.app-menu button svg {
   width: 15px;
   height: 15px;
-  color: #9d79b9;
+  color: #858585;
 }
-.dropdown kbd {
+.app-menu kbd {
   margin-left: auto;
   font-size: 9px;
 }
@@ -881,31 +881,31 @@ svg {
   align-items: center;
   gap: 12px;
   padding: 10px 12px 10px 17px;
-  border: 1px solid #6e4c7f;
+  border: 1px solid #575757;
   border-radius: 8px;
-  background: #201329;
+  background: #171717;
   box-shadow: 0 10px 50px #0009;
-  color: #dfc7ec;
+  color: #cfcfcf;
   max-width: min(650px, 90vw);
   z-index: 100;
   font-size: 11px;
   line-height: 1.6;
 }
 .toast > svg {
-  color: #b48cd0;
+  color: #999999;
 }
 .drop-overlay {
   position: fixed;
   inset: 52px 8px 8px;
   z-index: 80;
-  border: 1px dashed #a580cf;
+  border: 1px dashed #8e8e8e;
   border-radius: 10px;
-  background: #160d21ed;
+  background: #101010ed;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #c5a6e6;
+  color: #b1b1b1;
   pointer-events: none;
 }
 .drop-overlay h2 {
@@ -914,7 +914,7 @@ svg {
   letter-spacing: -0.5px;
 }
 .drop-overlay p {
-  color: #897197;
+  color: #797979;
 }
 .modal-shade {
   position: fixed;
@@ -931,9 +931,9 @@ svg {
   width: min(480px, calc(100vw - 35px));
   max-height: calc(100vh - 50px);
   overflow: auto;
-  border: 1px solid #493052;
+  border: 1px solid #383838;
   border-radius: 12px;
-  background: #130c1b;
+  background: #0f0f0f;
   padding: 25px;
   box-shadow: 0 20px 100px #0009;
 }
@@ -945,11 +945,11 @@ svg {
 .text-dialog input,
 .text-dialog textarea {
   width: 100%;
-  background: #0b070f;
-  border: 1px solid #513261;
+  background: #080808;
+  border: 1px solid #3c3c3c;
   padding: 12px;
   resize: vertical;
-  color: #dec8ec;
+  color: #cfcfcf;
 }
 .dialog-actions {
   display: flex;
@@ -974,19 +974,19 @@ svg {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #b894db;
+  color: #a1a1a1;
 }
 .about-brand h2 {
   font-size: 32px;
   letter-spacing: -1px;
   margin: 0;
-  color: #e3d7eb;
+  color: #dbdbdb;
 }
 .about-brand h2 span {
-  color: #ba94df;
+  color: #a1a1a1;
 }
 .about-dialog > p {
-  color: #887093;
+  color: #787878;
   font-size: 11px;
 }
 .shortcut-list {
@@ -997,8 +997,8 @@ svg {
   justify-content: space-between;
   gap: 12px;
   padding: 7px 0;
-  border-bottom: 1px solid #2b1c34;
-  color: #baa3c8;
+  border-bottom: 1px solid #212121;
+  color: #ababab;
   font-size: 11px;
 }
 .about-footnote {
@@ -1020,11 +1020,11 @@ svg {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #24172de8;
-  border: 1px solid #51345e;
+  background: #1b1b1be8;
+  border: 1px solid #3d3d3d;
   border-radius: 6px;
   padding: 7px 10px;
-  color: #c7afd6;
+  color: #b7b7b7;
   font-size: 10px;
   opacity: 0.15;
 }

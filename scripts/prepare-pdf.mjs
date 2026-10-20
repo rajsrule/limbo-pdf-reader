@@ -39,6 +39,11 @@ replaceOnce(
   "        await this._editToolbar.addButton(name, tool);",
   "        const limboToolbar = this._editToolbar;\n        await limboToolbar.addButton(name, tool);\n        if (this._editToolbar !== limboToolbar) return null;",
 );
+// One pass over existing editors, independent of the document's page count.
+replaceOnce(
+  "  *getEditors(pageIndex) {",
+  "  limboEditors() { return this.#allEditors.values(); }\n  *getEditors(pageIndex) {",
+);
 await writeFile(
   new URL("pdf.mjs", vendor),
   pdf.replace(/\/\/# sourceMappingURL=.*$/gm, ""),
