@@ -12,6 +12,7 @@ Validated on Windows 11 x64 using Node 24.19.0, Rust 1.99.1/MSVC, PDF.js 6.4.299
 - The actual release executable was opened and visually inspected on Windows. Opening a generated PDF through a second process correctly reached the running desktop reader and rendered Smart Dark.
 - Per-user NSIS installation completed successfully, installed the executable, license notices, uninstaller, and Start menu shortcut, registered Limbo in Open with, and preserved both the fallback file association and Windows UserChoice. The test uninstaller removed its executable and preserved the draft folder. Explicit NSIS registration hooks avoid Tauri's default-handler association macro.
 - Earlier same-version and 0.1.0-to-0.1.1 upgrades preserved both PDF defaults. Installed binaries matched their release builds byte for byte after accounting for Tauri's expected three-byte NSIS bundle marker.
+- The 0.1.2 upgrade passed with existing draft files preserved, PDF defaults unchanged, Open with/Start menu entries present, and the installed executable matching the final release build after the same bundle-marker normalization.
 - npm dependency audit: zero known vulnerabilities after updating Vitest to 4.1.12.
 
 ## Performance observations
