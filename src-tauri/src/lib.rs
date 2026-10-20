@@ -26,6 +26,12 @@ struct DocumentInfo {
 struct Session {
     info: DocumentInfo,
     file: File,
+    previous_reader: Option<String>,
+}
+impl Session {
+    fn readable_by(&self, label: &str) -> bool {
+        self.info.owner == label || self.previous_reader.as_deref() == Some(label)
+    }
 }
 #[derive(Clone, Default, Serialize, Deserialize)]
 struct Payload {
@@ -195,6 +201,7 @@ fn open_file(app: &tauri::AppHandle, path: &str, owner: &str) -> Result<Document
         Session {
             info: info.clone(),
             file,
+            previous_reader: None,
         },
     );
     Ok(info)
@@ -226,7 +233,10 @@ fn read_document(
     end: u64,
 ) -> Result<Response, String> {
     let mut sessions = store.sessions.lock().map_err(err)?;
-    let session = owned(&mut sessions, &id, &window)?;
+    let session = sessions
+        .get_mut(&id)
+        .filter(|session| session.readable_by(window.label()))
+        .ok_or_else(|| "This document is no longer available to this window.".to_string())?;
     let meta = session.file.metadata().map_err(err)?;
     let modified = meta
         .modified()
@@ -396,6 +406,9 @@ async fn transfer_document(
     let info = {
         let mut sessions = store.sessions.lock().map_err(err)?;
         let session = owned(&mut sessions, &id, &window)?;
+        // Keep in-flight range reads in the source working until its tab unmounts.
+        // Editing and saving remain exclusive to the destination owner.
+        session.previous_reader = Some(window.label().into());
         session.info.owner = label.clone();
         session.info.clone()
     };
@@ -432,6 +445,7 @@ async fn transfer_document(
                     // Its Destroyed event must never invalidate the source tab.
                     if let Some(session) = store.sessions.lock().unwrap().get_mut(&id) {
                         session.info.owner = window.label().into();
+                        session.previous_reader = None;
                     }
                     let _ = target.destroy();
                     "The new window did not become ready. The tab remains here.".to_string()
@@ -442,6 +456,7 @@ async fn transfer_document(
     };
     if let Some(session) = store.sessions.lock().unwrap().get_mut(&id) {
         session.info.owner = window.label().into();
+        session.previous_reader = None;
     }
     store.initial.lock().unwrap().remove(&label);
     store.ready.lock().unwrap().remove(&label);
@@ -497,6 +512,11 @@ fn release_window(store: &Store, label: &str) {
             .lock()
             .unwrap()
             .retain(|_, session| session.info.owner != label);
+    }
+    for session in store.sessions.lock().unwrap().values_mut() {
+        if session.previous_reader.as_deref() == Some(label) {
+            session.previous_reader = None;
+        }
     }
 }
 pub fn run() {
@@ -583,6 +603,7 @@ mod tests {
                     draft_changed: false,
                 },
                 file: File::open(Path::new(env!("CARGO_MANIFEST_DIR")).join("../LICENSE")).unwrap(),
+                previous_reader: Some("source".into()),
             },
         );
         let (sender, mut receiver) = tokio::sync::oneshot::channel();
@@ -610,6 +631,31 @@ mod tests {
         assert!(store.sessions.lock().unwrap().contains_key("document"));
         release_window(&store, "source");
         assert!(store.sessions.lock().unwrap().is_empty());
+    }
+    #[test]
+    fn transfer_keeps_source_range_reads_available_without_granting_other_windows_access() {
+        let mut session = Session {
+            info: DocumentInfo {
+                id: "document".into(),
+                name: "test".into(),
+                path: String::new(),
+                size: 0,
+                identity: "ab".repeat(32),
+                modified: 0,
+                owner: "destination".into(),
+                draft_changed: false,
+            },
+            file: File::open(Path::new(env!("CARGO_MANIFEST_DIR")).join("../LICENSE")).unwrap(),
+            previous_reader: Some("source".into()),
+        };
+        assert!(session.readable_by("source"));
+        assert!(session.readable_by("destination"));
+        assert!(!session.readable_by("unrelated"));
+        assert_ne!(session.info.owner, "source");
+        session.info.owner = "source".into();
+        session.previous_reader = None;
+        assert!(session.readable_by("source"));
+        assert!(!session.readable_by("destination"));
     }
     #[test]
     fn atomic_replace_preserves_complete_contents() {

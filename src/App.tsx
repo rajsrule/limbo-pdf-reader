@@ -183,7 +183,7 @@ export default function App() {
   const split = () =>
     serialize(async () => {
       if (groupRef.current.length === 2) {
-        await flushGroup(1);
+        await Promise.all([flushGroup(0), flushGroup(1)]);
         setGroups((current) => {
           const next = [
             {
