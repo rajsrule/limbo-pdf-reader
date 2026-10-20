@@ -1,0 +1,60 @@
+/* Keep the constellation as lines; only its stars are filled. */
+.document-tab {
+  touch-action: none;
+}
+.tab-drag-ghost {
+  position: fixed;
+  z-index: 99;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 240px;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 10px 14px;
+  background: #291b37;
+  border: 1px solid #8f6ab1;
+  border-radius: 6px;
+  color: #d2b7e6;
+  box-shadow: 0 8px 25px #0009;
+  font-size: 11px;
+}
+.limbo-emblem svg > path {
+  fill: none;
+}
+.transfer-overlay {
+  position: fixed;
+  inset: 46px 0 0;
+  z-index: 90;
+  background: #09050fe8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #bd9ddd;
+}
+.reader .annotationEditorLayer .highlightEditor .editToolbar {
+  color-scheme: dark;
+}
+.reader .annotationEditorLayer .highlightEditor.selectedEditor {
+  outline-color: #bb91e6;
+}
+@container (max-width:570px) {
+  .reader-toolbar > .tool-cluster:first-child {
+    gap: 0;
+  }
+  .reader-toolbar > .tool-cluster:first-child .tool {
+    min-width: 28px;
+  }
+  .reader-toolbar .page-navigation {
+    gap: 3px;
+  }
+  .reader-toolbar .color-mode {
+    font-size: 10px;
+  }
+  .reader-toolbar .zoom-controls {
+    padding-left: 0;
+    border: 0;
+  }
+}

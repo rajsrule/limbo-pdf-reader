@@ -1,0 +1,17 @@
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/
+src-tauri/icons/android/
+src-tauri/icons/ios/
+.tools/
+.cache/
+test-results/
+playwright-report/
+*.log
+public/pdfjs/
+src/vendor/
+artifacts/
+*.tsbuildinfo
+/Example txt file.txt
+/Another example txt file.txt
