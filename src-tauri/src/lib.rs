@@ -519,8 +519,24 @@ fn release_window(store: &Store, label: &str) {
         }
     }
 }
+fn local_navigation(url: &tauri::Url) -> bool {
+    let bundled = (url.scheme() == "tauri" && url.host_str() == Some("localhost"))
+        || (matches!(url.scheme(), "http" | "https")
+            && url.host_str() == Some("tauri.localhost")
+            && url.port().is_none());
+    let development = cfg!(debug_assertions)
+        && url.scheme() == "http"
+        && url.host_str() == Some("127.0.0.1")
+        && url.port() == Some(1420);
+    url.username().is_empty() && url.password().is_none() && (bundled || development)
+}
 pub fn run() {
     tauri::Builder::default()
+        .plugin(
+            tauri::plugin::Builder::<tauri::Wry, ()>::new("local-navigation")
+                .on_navigation(|_, url| local_navigation(url))
+                .build(),
+        )
         .plugin(tauri_plugin_single_instance::init(|app, args, cwd| {
             receive_paths(app, args, &cwd)
         }))
@@ -580,6 +596,27 @@ pub fn run() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn navigation_stays_on_bundled_application_origins() {
+        assert!(local_navigation(
+            &tauri::Url::parse("http://tauri.localhost/index.html").unwrap()
+        ));
+        assert!(local_navigation(
+            &tauri::Url::parse("tauri://localhost/index.html").unwrap()
+        ));
+        for value in [
+            "https://example.com/",
+            "https://tauri.localhost.example.com/",
+            "file:///C:/Windows/",
+            "http://tauri.localhost:9090/",
+            "http://user@tauri.localhost/",
+        ] {
+            assert!(
+                !local_navigation(&tauri::Url::parse(value).unwrap()),
+                "{value}"
+            );
+        }
+    }
     #[test]
     fn record_identity_rejects_paths() {
         assert!(!valid_identity("../../escape"));

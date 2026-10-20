@@ -1,4 +1,4 @@
-# Validation — Limbo 0.1.0
+# Validation — Limbo 0.1.1
 
 Validated on Windows 11 x64 using Node 24.19.0, Rust 1.99.1/MSVC, PDF.js 6.4.299 (compatibility build), and Chromium 141 for browser automation.
 
@@ -7,7 +7,7 @@ Validated on Windows 11 x64 using Node 24.19.0, Rust 1.99.1/MSVC, PDF.js 6.4.299
 - Production frontend build and native Windows release compilation.
 - Four unit tests: white/black mapping, preservation of saturated and pale colors, continuous neutral ramp, and transparent/pattern passthrough.
 - Seven end-to-end tests: welcome/keyboard split controls; PDF colors, image-region SHA-256 comparison, dark/scanned/complex-page decisions and chapters; independent split navigation/search; 360-pixel welcome; highlights/comments with export, recovery, editing, deletion and undo; pointer-based tab transfer between groups; 600-page on-demand rendering.
-- Four Rust tests: record/path validation, atomic replacement of saved records, cancellation/ownership preservation when an unready transfer destination closes, and continued source reads during a window handoff.
+- Five Rust tests: record/path validation, atomic replacement of saved records, cancellation/ownership preservation when an unready transfer destination closes, continued source reads during a window handoff, and application navigation restricted to bundled origins.
 - Independent pdf-lib parsing confirms a standard Highlight annotation and comment Contents, with the source PDF bytes preserved exactly before the incremental annotation update.
 - The actual release executable was opened and visually inspected on Windows. Opening a generated PDF through a second process correctly reached the running desktop reader and rendered Smart Dark.
 - Per-user NSIS installation completed successfully, installed the executable, license notices, uninstaller, and Start menu shortcut, registered Limbo in Open with, and preserved both the fallback file association and Windows UserChoice. The test uninstaller removed its executable and preserved the draft folder. Explicit NSIS registration hooks avoid Tauri's default-handler association macro.
